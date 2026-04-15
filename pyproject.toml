@@ -8,6 +8,7 @@ dependencies = [
     "email-validator>=2.3.0",
     "pydantic>=2.13.0",
     "pytest>=9.0.3",
+    "ruff>=0.15.10",
 ]
 
 [tool.setuptools]

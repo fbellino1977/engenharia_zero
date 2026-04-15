@@ -2,9 +2,9 @@ from engenharia_zero.models import User
 from pydantic import ValidationError
 
 dados_externos = [
-    {"id": 1, "name": "Fabio", "email": "fabio@exemplo.com"},
-    {"id": "dois", "name": "Erro", "email": "email_ruim"},
-    {"id": 3, "name": "Ana", "email": "ana@exemplo.com"}
+    {"id": 1, "name": "Fabio", "age": 48, "email": "fabio@exemplo.com"},
+    {"id": "dois", "name": "Erro", "age": 35, "email": "email_ruim"},
+    {"id": 3, "name": "Ana", "age": 24, "email": "ana@exemplo.com"},
 ]
 
 for i, dado in enumerate(dados_externos):
@@ -14,4 +14,3 @@ for i, dado in enumerate(dados_externos):
         print(f"Usuário [{user.name}] criado.")
     except ValidationError as e:
         print(f"Falha no item [{i}]: [{e.json()}]")
-    
