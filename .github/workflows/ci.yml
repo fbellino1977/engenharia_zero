@@ -12,4 +12,4 @@ jobs:
       - name: Install dependencies
         run: uv sync
       - name: Run app
-        run: uv run app.py
+        run: uv run pytest
