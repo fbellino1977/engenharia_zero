@@ -15,17 +15,15 @@ with Session(engine) as session:
     try:
         # Valida a entrada de dados antes de persistir no banco de dados
         usuario = User(
-            id = 0, # Este dado será criado automaticamente pelo banco de dados
-            name = "Aline",
-            age = 39,
-            email = "aline@exemplo.com"
+            id=0,  # Este dado será criado automaticamente pelo banco de dados
+            name="Aline",
+            age=39,
+            email="aline@exemplo.com",
         )
-    
+
         # Criar um objeto de banco de dados
         novo_usuario = UserTable(
-            name=usuario.name,
-            age=usuario.age,
-            email=usuario.email
+            name=usuario.name, age=usuario.age, email=usuario.email
         )
 
         # Adicionar e confirmar (commit)
@@ -37,6 +35,8 @@ with Session(engine) as session:
         query = select(UserTable).where(UserTable.email == "aline@exemplo.com")
         usuario_recuperado = session.scalar(query)
 
-        print(f"Recuperado do banco: {usuario_recuperado.name}, idade: {usuario_recuperado.age}")
+        print(
+            f"Recuperado do banco: {usuario_recuperado.name}, idade: {usuario_recuperado.age}"
+        )
     except ValidationError as e:
         print(f"Erro: {e.json()}")
