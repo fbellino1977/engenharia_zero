@@ -9,7 +9,7 @@ dados_externos = [
 
 for i, dado in enumerate(dados_externos):
     try:
-        # Cria o usuário
+        # Creates the User
         user = User(**dado)
         print(f"Usuário [{user.name}] criado.")
     except ValidationError as e:
