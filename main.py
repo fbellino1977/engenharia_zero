@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from engenharia_zero.models import User
-from engenharia_zero.database import UserTable, engine, SessionLocal
+from engenharia_zero.database import UserTable, SessionLocal
 
 app = FastAPI()
 
