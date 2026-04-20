@@ -38,7 +38,10 @@ def test_create_invoice_with_items_db(db_session):
 
     # 3. Creates the Invoice Item (Relationship)
     new_item = models.InvoiceItemTable(
-        invoice_id=new_invoice.id, product_id=product.id, quantity=2, unit_price=product.price
+        invoice_id=new_invoice.id,
+        product_id=product.id,
+        quantity=2,
+        unit_price=product.price,
     )
     db_session.add(new_item)
     db_session.commit()

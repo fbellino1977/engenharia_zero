@@ -8,7 +8,6 @@ from alembic import context
 import sys
 from os.path import abspath, dirname
 
-from engenharia_zero.database import Base
 from engenharia_zero import models
 
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
