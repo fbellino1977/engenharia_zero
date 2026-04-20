@@ -1,19 +1,10 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
-from sqlalchemy import String, Integer
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 
 # 1. Defining the Base for Alembic and Models
 class Base(DeclarativeBase):
     pass
-
-
-class UserTable(Base):
-    __tablename__ = "users"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(100))
-    age: Mapped[int] = mapped_column(Integer)
-    email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
 
 
 # 2. Engine Configuration and Session Factory
@@ -25,3 +16,14 @@ engine = create_engine(
 
 # Here is the "Factory" that FastAPI will use
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+
+# 3. The "magic" of Dependency Injection
+# Dependency for FastAPI to obtain a session per request
+# This function opens the database, provides the connection to the function, and then closes it
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

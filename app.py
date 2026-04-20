@@ -1,4 +1,4 @@
-from engenharia_zero.models import User
+from engenharia_zero.schemas import User
 from pydantic import ValidationError
 
 dados_externos = [
