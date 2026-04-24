@@ -1,5 +1,6 @@
 import pytest
 from pydantic import ValidationError
+import uuid
 from engenharia_zero.schemas import (
     UserCreate,
     ProductCreate,
@@ -12,7 +13,13 @@ from engenharia_zero.schemas import (
 
 def test_user_creation_success():
     # Tests whether a valid User is created correctly
-    user = UserCreate(name="Fabio", age="48", email="fabio@exemplo.com")
+    user = UserCreate(
+        name="Fabio",
+        email="fabio@exemplo.com",
+        telephone="1173849301",
+        birth_date="1977-11-05T00:00:00",
+        password="Mudar@123",
+    )
     assert user.name == "Fabio"
 
 
@@ -62,12 +69,15 @@ def test_invoice_item_invalid_quantity():
 def test_invoice_structure_success():
     """Tests the composition of an invoice with multiple items in the Schema"""
     items = [
-        InvoiceItemCreate(product_id=1, quantity=2),
-        InvoiceItemCreate(product_id=2, quantity=1),
+        InvoiceItemCreate(product_id=1, quantity=2, unit_price=17.55),
+        InvoiceItemCreate(product_id=2, quantity=1, unit_price=7.33),
     ]
-    invoice = InvoiceCreate(user_id=1, items=items)
+    invoice = InvoiceCreate(
+        user_uuid_id=uuid.UUID("12345678123456781234567812345678"),
+        items=items,
+    )
 
-    assert invoice.user_id == 1
+    assert invoice.user_uuid_id == uuid.UUID("12345678123456781234567812345678")
     assert len(invoice.items) == 2
     assert invoice.items[0].quantity == 2
 

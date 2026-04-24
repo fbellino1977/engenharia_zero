@@ -1,4 +1,5 @@
 import pytest
+from datetime import datetime
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -6,6 +7,8 @@ from sqlalchemy.pool import StaticPool
 
 from main import app
 from engenharia_zero.database import Base, get_db
+from engenharia_zero.models import UserTable
+from security.auth import create_access_token
 
 # 1. Define that the test database will be ONLY in RAM (volatile and fast)
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
@@ -65,3 +68,47 @@ def client(db_session):
 
     # Clean the replacement to avoid affecting other processes outside of testing
     app.dependency_overrides.clear()
+
+
+@pytest.fixture
+def test_user(db_session):
+    """Creates a common user in the test database and returns the object"""
+    user = UserTable(
+        name="Luca Comum",
+        email="luca@teste.com",
+        birth_date=datetime(2001, 11, 8),
+        hashed_password="hash_fake",  # We don't need to test hashes in route testing
+        is_admin=False,
+    )
+    db_session.add(user)
+    db_session.commit()
+    db_session.refresh(user)
+    return user
+
+
+@pytest.fixture
+def test_admin(db_session):
+    """Creates an administrator user in the test database and returns the object"""
+    admin = UserTable(
+        name="Fabio Admin",
+        email="fabio@teste.com",
+        birth_date=datetime(1977, 11, 5),
+        hashed_password="hash_fake",  # We don't need to test hashes in route testing
+        is_admin=True,
+    )
+    db_session.add(admin)
+    db_session.commit()
+    db_session.refresh(admin)
+    return admin
+
+
+@pytest.fixture
+def admin_headers(test_admin):
+    token = create_access_token(data={"sub": str(test_admin.user_uuid_id)})
+    return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.fixture
+def user_headers(test_user):
+    token = create_access_token(data={"sub": str(test_user.user_uuid_id)})
+    return {"Authorization": f"Bearer {token}"}

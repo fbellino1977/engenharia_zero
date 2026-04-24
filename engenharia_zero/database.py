@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from config.settings import settings
 
 
 # 1. Defining the Base for Alembic and Models
@@ -9,7 +10,7 @@ class Base(DeclarativeBase):
 
 # 2. Engine Configuration and Session Factory
 # The 'check_same_thread=False' attribute is a specific SQLite requirement for FastAPI
-SQLALCHEMY_DATABASE_URL = "sqlite:///./database.db"
+SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 )

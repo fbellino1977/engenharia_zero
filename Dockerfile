@@ -20,4 +20,5 @@ COPY . .
 EXPOSE 8000
 
 # 8. Command to run the application
-CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# We use /bin/sh -c to allow chaining of commands with '&&'
+CMD ["/bin/sh", "-c", "uv run alembic upgrade head && uv run python seed.py && uv run uvicorn main:app --host 0.0.0.0 --port 8000"]
