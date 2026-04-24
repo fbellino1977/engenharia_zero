@@ -10,6 +10,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
     
+    # Setting environment variables so that all job steps can see them
+    env:
+      SECRET_KEY: "4E9fP_XbixUiYqLs2mrcXBjImu4WMiBJlTYhvmIrE5g"
+      ALGORITHM: "HS256"
+      ACCESS_TOKEN_EXPIRE_MINUTES: "30"
+      DATABASE_URL: "sqlite:///./test.db"
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
