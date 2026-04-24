@@ -8,7 +8,7 @@ from sqlalchemy.pool import StaticPool
 from main import app
 from engenharia_zero.database import Base, get_db
 from engenharia_zero.models import UserTable
-from security.auth import create_access_token
+from security.auth import create_access_token, get_password_hash
 
 # 1. Define that the test database will be ONLY in RAM (volatile and fast)
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
@@ -77,7 +77,7 @@ def test_user(db_session):
         name="Luca Comum",
         email="luca@teste.com",
         birth_date=datetime(2001, 11, 8),
-        hashed_password="hash_fake",  # We don't need to test hashes in route testing
+        hashed_password=get_password_hash("Mudar@123"),
         is_admin=False,
     )
     db_session.add(user)
@@ -93,7 +93,7 @@ def test_admin(db_session):
         name="Fabio Admin",
         email="fabio@teste.com",
         birth_date=datetime(1977, 11, 5),
-        hashed_password="hash_fake",  # We don't need to test hashes in route testing
+        hashed_password=get_password_hash("Mudar@123"),
         is_admin=True,
     )
     db_session.add(admin)

@@ -55,6 +55,11 @@ class InvoiceCreate(BaseModel):
     items: List[InvoiceItemCreate] = Field(..., min_length=1)
 
 
+class PasswordUpdate(BaseModel):
+    current_password: str = Field(..., min_length=8)
+    new_password: str = Field(..., min_length=8)
+
+
 """ OUTPUT SCHEMAS (Rich in information for the Front-End) """
 
 

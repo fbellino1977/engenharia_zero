@@ -22,7 +22,7 @@ def seed_database():
 
     print("🌱 Seeding database...")
 
-    # 2. Create a Test User
+    # 2. Create a Test Admin User
     hashed_pw = pwd_context.hash("Mudar@123")
     user_uuid_id = uuid.uuid4()
 
@@ -40,7 +40,25 @@ def seed_database():
     session.add(test_user)
     session.flush()  # For SQLAlchemy to generate the user's 'id' (integer)
 
-    # 3. Create a linked test invoice
+    # 3. Create a Test Common User
+    hashed_pw = pwd_context.hash("Mudar@123")
+    user_uuid_id = uuid.uuid4()
+
+    test_user = UserTable(
+        user_uuid_id=user_uuid_id,
+        name="Luca Comum",
+        email="luca@exemplo.com",
+        telephone="11988999988",
+        birth_date=datetime(year=2001, month=11, day=8),
+        hashed_password=hashed_pw,
+        is_active=True,
+        is_admin=False,
+    )
+
+    session.add(test_user)
+    session.flush()  # For SQLAlchemy to generate the user's 'id' (integer)
+
+    # 4. Create a linked test invoice
     test_invoice = InvoiceTable(
         user_id=test_user.user_id,  # Technical FK (Integer)
         user_uuid_id=test_user.user_uuid_id,  # Public FK (UUID)

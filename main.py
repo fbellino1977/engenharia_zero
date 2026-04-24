@@ -324,3 +324,27 @@ def create_invoice(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Erro interno ao processar fatura",
         )
+
+
+@app.patch("/users/me/password", status_code=status.HTTP_204_NO_CONTENT)
+def update_password(
+    password_data: schemas.PasswordUpdate,
+    current_user: models.UserTable = Depends(get_current_user),
+    db: Session = Depends(database.get_db),
+) -> None:
+    # 1. Checks if the current password matches the one in the database.
+    if not auth.verify_password(
+        password_data.current_password, current_user.hashed_password
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Senha atual incorreta"
+        )
+
+    # 2. Generates the new hash and updates the model attribute
+    current_user.hashed_password = auth.get_password_hash(password_data.new_password)
+
+    # 3. Persiste a mudança
+    db.add(current_user)
+    db.commit()
+
+    return None

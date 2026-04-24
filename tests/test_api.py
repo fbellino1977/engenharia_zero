@@ -40,6 +40,44 @@ def test_user_cannot_access_other_profile(client, test_admin, user_headers):
     assert response.status_code == status.HTTP_403_FORBIDDEN
 
 
+def test_update_password_success(client, user_headers):
+    """It should allow the logged-in user to change their own password"""
+    password_data = {
+        "current_password": "Mudar@123",
+        "new_password": "NovaSenhaForte@2026",
+    }
+
+    # Try updating your password
+    response = client.patch(
+        "/users/me/password", json=password_data, headers=user_headers
+    )
+
+    assert response.status_code == status.HTTP_204_NO_CONTENT
+
+    # Validation of "Force Login":
+    # We tried to access a protected route with the OLD token.
+    # If we implement token invalidation, this should return a 401.
+    # For now, let's validate that logging in with the old password fails.
+    login_data = {"username": "luca@exemplo.com", "password": "Mudar@123"}
+    login_response = client.post("/auth/login", data=login_data)
+    assert login_response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+def test_update_password_wrong_current(client, user_headers):
+    """You should not allow the change if the current password is incorrect"""
+    password_data = {
+        "current_password": "SenhaErrada@123",
+        "new_password": "NovaSenhaForte@2026",
+    }
+
+    response = client.patch(
+        "/users/me/password", json=password_data, headers=user_headers
+    )
+
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert response.json()["detail"] == "Senha atual incorreta"
+
+
 # --- Authorization Tests --- (end)
 
 
