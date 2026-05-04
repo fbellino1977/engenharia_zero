@@ -1,52 +1,59 @@
-# Engenharia Zero API 🚀
+# Engenharia do Zero - Backend 🚀
 
-Uma API robusta de gestão de faturas desenvolvida com FastAPI, SQLAlchemy e Pydantic. Este projeto demonstra boas práticas de engenharia de software, incluindo transações atômicas, snapshot de preços e testes automatizados.
+Este projeto é uma API de alta fidelidade técnica desenvolvida com **FastAPI**. O objetivo central é demonstrar a aplicação rigorosa de práticas de Engenharia de Software, com foco em tipagem estática, segurança e arquitetura desacoplada.
 
-## 🛠️ Tecnologias Utilizadas
+## 🛠️ Stack de Engenharia
 
-* Python 3.14+
-* FastAPI: Framework web moderno e rápido.
-* SQLAlchemy 2.0: ORM para mapeamento de banco de dados.
-* Pydantic 2: Validação de dados e schemas.
-* Alembic: Gestão de migrações de banco de dados.
-* Pytest: Suíte de testes automatizados.
-* Docker & UV: Containerização e gerenciamento de pacotes ultra-rápido.
+* **Python 3.13**: Utilizando as últimas features da linguagem.
+* **uv**: Gerenciamento de pacotes e ambiente virtual ultra-rápido.
+* **FastAPI**: Framework web de alta performance.
+* **SQLAlchemy 2.0**: ORM moderno com suporte a tipagem.
+* **Pydantic 2**: Schemas e validação de dados rigorosa.
+
+## 🛡️ Pilares de Qualidade (XP)
+
+O projeto adota uma política de **"Verdadeiro ou Nada"** para o pipeline de código:
+
+1. **Linting & Estilo**: `Ruff` para garantir um código limpo e padronizado.
+2. **Tipagem Estática**: `Mypy` em modo **Strict** (zero tolerância a tipos implícitos).
+3. **Segurança**: `Bandit` para análise de vulnerabilidades em tempo de design.
+4. **Testes**: `Pytest` para garantir que o domínio se comporta como esperado.
 
 ## 🚀 Como Executar
 
-### Usando Docker (Recomendado)
+### Desenvolvimento Local
 
-1. Certifique-se de ter o Docker instalado.
-2. Na raiz do projeto, execute o build: 
-   docker build -t engenharia-zero .
-3. Execute o container: 
-   docker run -p 8000:8000 engenharia-zero
-4. Acesse a documentação em: http://localhost:8000/docs
-
-### Desenvolvimento Local (com UV)
-
-1. Instale as dependências: 
+1. Instale as dependências:
+   ```bash
    uv sync
-2. Rode o servidor (garantindo que o Python encontre o pacote local): 
-   PYTHONPATH=. uv run uvicorn main:app --reload
 
-## 🧪 Testes
+2. Execute o servidor em modo de desenvolvimento:
+   ```bash
+   uv run fastapi dev src/app/api/main.py
 
-Para rodar a suíte de testes (unidade e integração), utilize o comando:
-PYTHONPATH=. uv run pytest
+3. Acesse a documentação interativa: http://localhost:8000/docs
 
-## 📌 Funcionalidades Principais
+## 🧪 Verificação de Integridade
 
-* Gestão de Usuários: Cadastro com validação de e-mail único.
-* Catálogo de Produtos: Registro de itens com preços dinâmicos.
-* Faturamento Inteligente:
-    * Preço Congelado (Snapshot): O preço do produto é registrado no item da fatura no momento da venda, garantindo integridade histórica.
-    * Rollback Automático: Se um produto da lista não existir, a transação é cancelada por completo.
-    * Cálculo Dinâmico: O valor total da fatura é calculado em tempo real através de propriedades do modelo.
+Antes de cada commit, é mandatório que o código passe pelo crivo das ferramentas:
 
-## 📁 Estrutura do Projeto
+   ```bash
+   # Formatação e Lint
+   uv run ruff check . --fix && uv run ruff format .
 
-* engenharia_zero/: Código fonte da aplicação (Models, Schemas, DB).
-* migrations/: Histórico de alterações do banco de dados (Alembic).
-* tests/: Testes automatizados.
-* main.py: Ponto de entrada da aplicação e definição das rotas.
+   # Tipagem (Blindagem)
+   uv run mypy src
+
+   # Segurança
+   uv run bandit -r src/
+
+   # Testes
+   uv run pytest
+
+## 📁 Estrutura de Domínios (Arquitetura)
+
+O projeto segue um padrão de separação de responsabilidades:
+• src/app/repositories/: Camada de persistência (SQLAlchemy).
+• src/app/services/: Lógica de negócio e orquestração.
+• src/app/schemas/: Contratos de entrada e saída (Pydantic).
+• src/app/api/: Rotas e controladores da API.

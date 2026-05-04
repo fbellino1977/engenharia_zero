@@ -1,0 +1,25 @@
+services:
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: engenharia-zero-api:latest
+    container_name: engenharia_zero_api
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app  # Hot-reload: reflects code changes without rebuild
+      - ./data:/app/data  # Database persistence
+      - /app/.venv # This creates an anonymous volume that "hides" the local .venv file from the container
+    env_file:
+      - .env
+    environment:
+      # Use absolute path to ensure SQLite stays in the dedicated data folder inside the container
+      - DATABASE_URL=sqlite:////app/data/database.db
+      # Points to src so the 'app' package is discoverable
+      - PYTHONPATH=/app/src
+    restart: always
+
+networks:
+  default:
+    name: engenharia_zero_network

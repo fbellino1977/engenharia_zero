@@ -1,6 +1,9 @@
+from collections.abc import Generator
+
 from sqlalchemy import create_engine
-from sqlalchemy.orm import DeclarativeBase, sessionmaker
-from config.settings import settings
+from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
+
+from app.core import settings
 
 
 # 1. Defining the Base for Alembic and Models
@@ -22,7 +25,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # 3. The "magic" of Dependency Injection
 # Dependency for FastAPI to obtain a session per request
 # This function opens the database, provides the connection to the function, and then closes it
-def get_db():
+def get_db() -> Generator[Session]:
     db = SessionLocal()
     try:
         yield db

@@ -1,10 +1,10 @@
-from datetime import datetime, timedelta, timezone
-from typing import Any, Dict, Optional
+from datetime import UTC, datetime, timedelta
+from typing import Any
 
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 
-from config.settings import settings
+from app.core.settings import settings
 
 # TODO: In the future, these constants will come from a .env file via Pydantic Settings
 # Tip: use 'python -c "import secrets; print(secrets.token_urlsafe(32))"'
@@ -31,7 +31,7 @@ def get_password_hash(password: str) -> str:
 
 
 def create_access_token(
-    data: Dict[str, Any], expires_delta: Optional[timedelta] = None
+    data: dict[str, Any], expires_delta: timedelta | None = None
 ) -> str:
     """
     Creates a signed JSON Web Token (JWT)
@@ -40,14 +40,12 @@ def create_access_token(
         data: Dictionary containing the token claims (e.g., 'sub')
         expires_delta: Optional time for custom expiration
     """
-    to_encode: Dict[str, Any] = data.copy()
+    to_encode: dict[str, Any] = data.copy()
 
     if expires_delta:
-        expire: datetime = datetime.now(timezone.utc) + expires_delta
+        expire: datetime = datetime.now(UTC) + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(
-            minutes=ACCESS_TOKEN_EXPIRE_MINUTES
-        )
+        expire = datetime.now(UTC) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
     # O campo 'exp' é um padrão do JWT (Registered Claim Name)
     to_encode.update({"exp": expire})
@@ -56,13 +54,13 @@ def create_access_token(
     return encoded_jwt
 
 
-def decode_access_token(token: str) -> Optional[Dict[str, Any]]:
+def decode_access_token(token: str) -> dict[str, Any] | None:
     """
     Decodes a token and verifies its signature
     Returns None if the token is invalid or expired
     """
     try:
-        payload: Dict[str, Any] = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload: dict[str, Any] = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         return payload
     except JWTError:
         return None

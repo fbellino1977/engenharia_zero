@@ -7,3 +7,8 @@ __pycache__
 .gitignore
 Dockerfile
 .dockerignore
+.python-version
+.uv
+.mypy_cache
+.ruff_cache
+.pytest_cache

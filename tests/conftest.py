@@ -1,16 +1,16 @@
-import pytest
 from datetime import datetime
+
+import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from main import app
-from engenharia_zero.database import Base, get_db
-from engenharia_zero.models import UserTable
-from security.auth import create_access_token, get_password_hash
+from app.api import app
+from app.db import Base, UserTable, get_db
+from app.security import create_access_token, get_password_hash
 
-# 1. Define that the test database will be ONLY in RAM (volatile and fast)
+# 1. Defines that the test database will be ONLY in RAM (volatile and fast)
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
 
 # 2. Creates the execution engine for the in-memory database
